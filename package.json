@@ -1,0 +1,9 @@
+{
+  "name": "llvm-constant-folding-pass-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local web UI for running the LLVM constant folding and strength reduction pass.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -37,7 +37,7 @@ becomes:
 - `tests/actual/*.ll`: output captured from a real `opt` run.
 - `tests/opt-run-output.md`: command and verified `opt` output.
 - `report/report.md`: brief project report covering the approach, `ConstantExpr`, `ConstantInt`, and `IRBuilder`.
-- `frontend/`: optional static demo UI for explaining the optimization visually.
+- `frontend/` and `server.js`: optional local web UI that sends IR to `opt` and displays the real pass output.
 
 ## Requirements
 
@@ -127,4 +127,16 @@ cmake: 3.28.3
 
 ## Frontend Demo
 
-Open `frontend/index.html` in a browser. It demonstrates the same kinds of transformations for simple LLVM IR snippets using JavaScript. It is only a teaching/demo aid; the actual compiler optimization is performed by the LLVM pass through `opt`.
+Start the local UI server:
+
+```bash
+npm start
+```
+
+Then open:
+
+```text
+http://localhost:3000
+```
+
+The browser sends the input IR to `server.js`, which runs the compiled LLVM pass through `opt` and returns the transformed IR. The UI is still optional for the assignment; the required compiler optimization is the C++ pass and `opt` output.

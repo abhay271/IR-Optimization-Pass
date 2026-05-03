@@ -13,7 +13,7 @@
           <p class="eyebrow">Compiler Design</p>
           <h1>LLVM Pass Demo</h1>
         </div>
-        <button id="runButton" class="primary-button" type="button">Optimize</button>
+        <button id="runButton" class="primary-button" type="button">Run opt</button>
       </header>
 
       <section class="workspace" aria-label="LLVM optimization workspace">
@@ -27,8 +27,8 @@
 
         <div class="editor-pane">
           <div class="pane-header">
-            <h2>Demo Output</h2>
-            <span id="changeCount" class="status-pill">0 changes</span>
+            <h2>Optimized IR</h2>
+            <span id="changeCount" class="status-pill">Ready</span>
           </div>
           <pre id="outputIr" aria-live="polite"></pre>
         </div>
@@ -37,7 +37,7 @@
       <section class="notes" aria-label="Transformation summary">
         <div>
           <h2>Transformations</h2>
-          <p id="summaryText">Run the demo to see constant folding and strength reduction results.</p>
+          <p id="summaryText">Run the pass to see the optimized LLVM IR.</p>
         </div>
         <ul id="changeList"></ul>
       </section>

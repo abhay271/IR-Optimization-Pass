@@ -8,5 +8,7 @@ cmake-build-*/
 *.bc
 *.out.ll
 *.log
+.tmp-server*.log
+.tmp/
 .vscode/
 .idea/
