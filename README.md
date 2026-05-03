@@ -4,7 +4,7 @@ This project implements an LLVM function pass that performs two simple IR optimi
 
 1. **Constant folding**: evaluates binary arithmetic instructions whose operands are compile-time constants.
 2. **Strength reduction**: replaces multiplication or unsigned division by powers of two with cheaper shift instructions.
-3. **Algebraic identities**: removes simple cases such as `x * 0`, `x * 1`, `x + 0`, `x - 0`, and `x / 1`.
+3. **Algebraic identities**: removes simple multiplication cases such as `x * 0` and `x * 1`.
 
 Example transformations:
 

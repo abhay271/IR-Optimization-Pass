@@ -7,6 +7,7 @@
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/PassManager.h"
+#include "llvm/IR/PatternMatch.h"
 #include "llvm/Pass.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Support/raw_ostream.h"
@@ -22,6 +23,7 @@
 #include <vector>
 
 using namespace llvm;
+using namespace llvm::PatternMatch;
 
 namespace {
 
@@ -62,46 +64,19 @@ static bool isPositivePowerOfTwoGreaterThanOne(ConstantInt *C) {
   return !Value.isNegative() && Value.isPowerOf2() && Value.ugt(1);
 }
 
-static Value *trySimplifyAlgebraicIdentities(BinaryOperator *BO) {
-  auto *LHS = dyn_cast<ConstantInt>(BO->getOperand(0));
-  auto *RHS = dyn_cast<ConstantInt>(BO->getOperand(1));
+static Value *trySimplifyMulIdentities(BinaryOperator *BO) {
+  if (BO->getOpcode() != Instruction::Mul || !BO->getType()->isIntegerTy()) {
+    return nullptr;
+  }
 
-  switch (BO->getOpcode()) {
-  case Instruction::Add:
-    if (RHS && RHS->isZero()) {
-      return BO->getOperand(0);
-    }
-    if (LHS && LHS->isZero()) {
-      return BO->getOperand(1);
-    }
-    break;
+  Value *X = nullptr;
 
-  case Instruction::Sub:
-    if (RHS && RHS->isZero()) {
-      return BO->getOperand(0);
-    }
-    break;
+  if (match(BO, m_c_Mul(m_Value(X), m_Zero()))) {
+    return ConstantInt::get(BO->getType(), 0);
+  }
 
-  case Instruction::Mul:
-    if ((LHS && LHS->isZero()) || (RHS && RHS->isZero())) {
-      return ConstantInt::get(BO->getType(), 0);
-    }
-    if (RHS && RHS->isOne()) {
-      return BO->getOperand(0);
-    }
-    if (LHS && LHS->isOne()) {
-      return BO->getOperand(1);
-    }
-    break;
-
-  case Instruction::UDiv:
-    if (RHS && RHS->isOne()) {
-      return BO->getOperand(0);
-    }
-    break;
-
-  default:
-    break;
+  if (match(BO, m_c_Mul(m_Value(X), m_One()))) {
+    return X;
   }
 
   return nullptr;
@@ -166,7 +141,7 @@ static bool optimizeFunction(Function &F) {
         continue;
       }
 
-      if (Value *Simplified = trySimplifyAlgebraicIdentities(BO)) {
+      if (Value *Simplified = trySimplifyMulIdentities(BO)) {
         BO->replaceAllUsesWith(Simplified);
         ToErase.push_back(BO);
         Changed = true;

@@ -55,4 +55,4 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -S tests/algebraic_identities.ll -o tests/algebraic_identities.out.ll
 ```
 
-It simplifies cases such as `x * 0`, `x * 1`, and `x + 0`, producing the captured output in `tests/actual/algebraic_identities.ll`.
+It simplifies cases such as `x * 0` and `x * 1`, producing the captured output in `tests/actual/algebraic_identities.ll`.
