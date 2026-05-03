@@ -68,7 +68,7 @@ The plugin will be created in the `build/` directory. Depending on your OS, it m
 
 ## Run with `opt`
 
-For modern LLVM versions using the new pass manager:
+Verified with LLVM 18 using the new pass manager:
 
 ```bash
 opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
@@ -76,7 +76,7 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -S tests/combined.ll -o tests/combined.out.ll
 ```
 
-Some older course handouts show the legacy pass-manager style:
+The pass also includes a legacy `FunctionPass` registration for compatibility with older course material. Some older handouts show this style:
 
 ```bash
 opt -load ./build/ConstFoldStrengthReducePass.so \
@@ -100,6 +100,20 @@ entry:
 }
 ```
 
+Actual verified output:
+
+```llvm
+; ModuleID = 'tests/combined.ll'
+source_filename = "tests/combined.ll"
+
+define i32 @combined(i32 %x) {
+entry:
+  %b = shl i32 %x, 3
+  %c = add i32 %b, 9
+  ret i32 %c
+}
+```
+
 ## Verification Environment
 
 The pass was built and tested in Ubuntu 24.04 on WSL:
@@ -111,17 +125,6 @@ opt: Ubuntu LLVM version 18.1.3
 cmake: 3.28.3
 ```
 
-Expected output:
-
-```llvm
-define i32 @combined(i32 %x) {
-entry:
-  %b = shl i32 %x, 3
-  %c = add i32 %b, 9
-  ret i32 %c
-}
-```
-
 ## Frontend Demo
 
-Open `frontend/index.html` in a browser. It demonstrates the same kinds of transformations for simple LLVM IR snippets. It is only a teaching/demo aid; the actual compiler work is done by the LLVM pass.
+Open `frontend/index.html` in a browser. It demonstrates the same kinds of transformations for simple LLVM IR snippets using JavaScript. It is only a teaching/demo aid; the actual compiler optimization is performed by the LLVM pass through `opt`.
