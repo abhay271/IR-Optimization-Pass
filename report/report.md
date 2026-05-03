@@ -24,6 +24,7 @@ The pass applies two transformations:
 
 1. If both operands are LLVM constants, the operation is evaluated at compile time.
 2. If the operation is multiplication or unsigned division by a positive power of two, it is replaced by a shift.
+3. If one operand is an identity or absorbing constant, expressions such as `x * 0`, `x * 1`, `x + 0`, `x - 0`, and `x / 1` are simplified directly.
 
 The pass records transformed instructions and erases them after replacement.
 

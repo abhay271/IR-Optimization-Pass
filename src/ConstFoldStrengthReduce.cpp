@@ -62,6 +62,51 @@ static bool isPositivePowerOfTwoGreaterThanOne(ConstantInt *C) {
   return !Value.isNegative() && Value.isPowerOf2() && Value.ugt(1);
 }
 
+static Value *trySimplifyAlgebraicIdentities(BinaryOperator *BO) {
+  auto *LHS = dyn_cast<ConstantInt>(BO->getOperand(0));
+  auto *RHS = dyn_cast<ConstantInt>(BO->getOperand(1));
+
+  switch (BO->getOpcode()) {
+  case Instruction::Add:
+    if (RHS && RHS->isZero()) {
+      return BO->getOperand(0);
+    }
+    if (LHS && LHS->isZero()) {
+      return BO->getOperand(1);
+    }
+    break;
+
+  case Instruction::Sub:
+    if (RHS && RHS->isZero()) {
+      return BO->getOperand(0);
+    }
+    break;
+
+  case Instruction::Mul:
+    if ((LHS && LHS->isZero()) || (RHS && RHS->isZero())) {
+      return ConstantInt::get(BO->getType(), 0);
+    }
+    if (RHS && RHS->isOne()) {
+      return BO->getOperand(0);
+    }
+    if (LHS && LHS->isOne()) {
+      return BO->getOperand(1);
+    }
+    break;
+
+  case Instruction::UDiv:
+    if (RHS && RHS->isOne()) {
+      return BO->getOperand(0);
+    }
+    break;
+
+  default:
+    break;
+  }
+
+  return nullptr;
+}
+
 static Value *tryStrengthReduce(BinaryOperator *BO) {
   if (!BO->getType()->isIntegerTy()) {
     return nullptr;
@@ -116,6 +161,13 @@ static bool optimizeFunction(Function &F) {
 
       if (Constant *Folded = tryFoldConstants(BO)) {
         BO->replaceAllUsesWith(Folded);
+        ToErase.push_back(BO);
+        Changed = true;
+        continue;
+      }
+
+      if (Value *Simplified = trySimplifyAlgebraicIdentities(BO)) {
+        BO->replaceAllUsesWith(Simplified);
         ToErase.push_back(BO);
         Changed = true;
         continue;

@@ -46,3 +46,13 @@ entry:
 ```
 
 Additional verified outputs are stored in `tests/actual/`.
+
+The algebraic-identity test was also verified with:
+
+```bash
+opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
+  -passes=const-fold-strength-reduce \
+  -S tests/algebraic_identities.ll -o tests/algebraic_identities.out.ll
+```
+
+It simplifies cases such as `x * 0`, `x * 1`, and `x + 0`, producing the captured output in `tests/actual/algebraic_identities.ll`.
