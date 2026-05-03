@@ -91,7 +91,7 @@ After the new instruction is created, the original instruction's uses are replac
 
 ## Example Run
 
-Command for a modern LLVM installation:
+Command used for the verified run:
 
 ```bash
 opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
@@ -121,6 +121,8 @@ entry:
   ret i32 %c
 }
 ```
+
+The same output was generated with LLVM 18.1.3 on Ubuntu 24.04 through WSL and saved under `tests/actual/`.
 
 ## Limitations
 

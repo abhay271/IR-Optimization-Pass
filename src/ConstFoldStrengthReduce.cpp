@@ -54,8 +54,7 @@ static Constant *tryFoldConstants(BinaryOperator *BO) {
     return nullptr;
   }
 
-  return ConstantExpr::get(BO->getOpcode(), LHS, RHS,
-                           BO->getSubclassOptionalData());
+  return ConstantExpr::get(BO->getOpcode(), LHS, RHS);
 }
 
 static bool isPositivePowerOfTwoGreaterThanOne(ConstantInt *C) {

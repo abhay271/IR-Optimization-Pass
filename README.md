@@ -34,7 +34,8 @@ becomes:
 - `src/ConstFoldStrengthReduce.cpp`: LLVM pass implementation in C++.
 - `tests/*.ll`: sample LLVM IR input files.
 - `tests/expected/*.ll`: expected transformed IR output.
-- `tests/opt-run-output.md`: command and expected `opt` output.
+- `tests/actual/*.ll`: output captured from a real `opt` run.
+- `tests/opt-run-output.md`: command and verified `opt` output.
 - `report/report.md`: brief project report covering the approach, `ConstantExpr`, `ConstantInt`, and `IRBuilder`.
 - `frontend/`: optional static demo UI for explaining the optimization visually.
 
@@ -75,13 +76,15 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -S tests/combined.ll -o tests/combined.out.ll
 ```
 
-For older LLVM versions using the legacy pass manager:
+Some older course handouts show the legacy pass-manager style:
 
 ```bash
 opt -load ./build/ConstFoldStrengthReducePass.so \
   -const-fold-strength-reduce-legacy \
   -S tests/combined.ll -o tests/combined.out.ll
 ```
+
+LLVM 18 was used for verification, and the modern `-load-pass-plugin` command above is the supported command there.
 
 ## Sample Output
 
@@ -95,6 +98,17 @@ entry:
   %c = add i32 %b, %a
   ret i32 %c
 }
+```
+
+## Verification Environment
+
+The pass was built and tested in Ubuntu 24.04 on WSL:
+
+```text
+clang: Ubuntu clang version 18.1.3 (1ubuntu1)
+llvm-config: 18.1.3
+opt: Ubuntu LLVM version 18.1.3
+cmake: 3.28.3
 ```
 
 Expected output:

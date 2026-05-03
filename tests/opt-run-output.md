@@ -1,6 +1,29 @@
-# `opt` Run Output
+# Verified `opt` Run Output
 
-The command below is the one to use after LLVM is installed and the pass is built:
+The pass was built and tested in Ubuntu 24.04 on WSL using:
+
+```text
+clang: Ubuntu clang version 18.1.3 (1ubuntu1)
+llvm-config: 18.1.3
+opt: Ubuntu LLVM version 18.1.3
+cmake: 3.28.3
+```
+
+Build commands:
+
+```bash
+cmake -S . -B build -G Ninja -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm
+cmake --build build
+```
+
+Build output:
+
+```text
+[1/2] Building CXX object CMakeFiles/ConstFoldStrengthReducePass.dir/src/ConstFoldStrengthReduce.cpp.o
+[2/2] Linking CXX shared module ConstFoldStrengthReducePass.so
+```
+
+Run command:
 
 ```bash
 opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
@@ -8,9 +31,12 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -S tests/combined.ll -o tests/combined.out.ll
 ```
 
-Expected `tests/combined.out.ll`:
+Actual `tests/combined.out.ll`:
 
 ```llvm
+; ModuleID = 'tests/combined.ll'
+source_filename = "tests/combined.ll"
+
 define i32 @combined(i32 %x) {
 entry:
   %b = shl i32 %x, 3
@@ -19,4 +45,4 @@ entry:
 }
 ```
 
-This workspace currently does not have `opt`, `clang`, or `llvm-config` available on `PATH`, so the pass could not be built and executed locally yet. Once LLVM is installed, rerun the command above and replace this note with the actual terminal output if your instructor requires a literal run log.
+Additional verified outputs are stored in `tests/actual/`.
