@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LLVM Constant Folding Demo</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Compiler Design</p>
+          <h1>LLVM Pass Demo</h1>
+        </div>
+        <button id="runButton" class="primary-button" type="button">Optimize</button>
+      </header>
+
+      <section class="workspace" aria-label="LLVM optimization workspace">
+        <div class="editor-pane">
+          <div class="pane-header">
+            <h2>Input IR</h2>
+            <button id="resetButton" class="ghost-button" type="button">Reset</button>
+          </div>
+          <textarea id="inputIr" spellcheck="false"></textarea>
+        </div>
+
+        <div class="editor-pane">
+          <div class="pane-header">
+            <h2>Demo Output</h2>
+            <span id="changeCount" class="status-pill">0 changes</span>
+          </div>
+          <pre id="outputIr" aria-live="polite"></pre>
+        </div>
+      </section>
+
+      <section class="notes" aria-label="Transformation summary">
+        <div>
+          <h2>Transformations</h2>
+          <p id="summaryText">Run the demo to see constant folding and strength reduction results.</p>
+        </div>
+        <ul id="changeList"></ul>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
