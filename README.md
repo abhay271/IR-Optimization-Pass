@@ -202,6 +202,109 @@ The same variable works with the build script:
 LLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm ./build.sh
 ```
 
+## VS Code + WSL Full Walkthrough
+
+Use this section if you are on Windows, already opened the repository in VS Code, and want to run both the required script and the optional frontend.
+
+### 1. Confirm the Correct Terminal
+
+Open `Terminal` -> `New Terminal` in VS Code and make sure the terminal is WSL/Ubuntu, not PowerShell.
+
+The prompt should look similar to:
+
+```text
+abhay@AbhaysLaptop:/mnt/c/Users/abhay/OneDrive/Documents/New project 4$
+```
+
+Check the current folder:
+
+```bash
+pwd
+```
+
+It should print the repository path.
+
+### 2. Install Required Tools
+
+Run:
+
+```bash
+sudo apt update
+sudo apt install -y cmake ninja-build clang llvm-18 llvm-18-dev llvm-18-tools nodejs npm
+```
+
+If `sudo` asks for a password, enter the Ubuntu/WSL password. The terminal will not show characters while typing the password.
+
+### 3. Add LLVM Tools to PATH
+
+Run:
+
+```bash
+export PATH=/usr/lib/llvm-18/bin:$PATH
+```
+
+Check that LLVM is available:
+
+```bash
+opt --version
+llvm-config --version
+```
+
+### 4. Run the Required Script
+
+Run:
+
+```bash
+chmod +x build.sh run.sh
+./run.sh
+```
+
+Successful output ends with:
+
+```text
+All testcases matched expected output.
+```
+
+### 5. Start the Frontend
+
+Run:
+
+```bash
+npm start
+```
+
+Keep that terminal open while using the frontend.
+
+### 6. Open the Browser
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+### 7. Test With Custom LLVM IR
+
+Paste this sample IR into the frontend:
+
+```llvm
+define i32 @custom(i32 %x) {
+entry:
+  %a = add i32 4, 5
+  %b = mul i32 %x, 8
+  %c = add i32 %a, %b
+  ret i32 %c
+}
+```
+
+The optimized output should include a shift such as:
+
+```llvm
+%b = shl i32 %x, 3
+```
+
+and the constant expression `add i32 4, 5` should be replaced by `9`.
+
 ## Build Script
 
 Run:
