@@ -9,7 +9,7 @@ This repository contains a custom LLVM optimization pass written in C++. The pas
 3. strength reduction for unsigned division by powers of two,
 4. multiplication identity simplification for `x * 0` and `x * 1`.
 
-The intended grading path is:
+The automated grading/test path is:
 
 ```bash
 ./build.sh
@@ -21,6 +21,15 @@ The intended grading path is:
 ```bash
 ./run.sh
 ```
+
+The full demo flow is:
+
+```bash
+./run.sh
+npm start
+```
+
+`./run.sh` automatically runs the provided test cases and prints PASS/FAIL results. `npm start` starts the browser frontend for manually pasting LLVM IR.
 
 ## What the Project Optimizes
 
@@ -92,7 +101,7 @@ flowchart LR
 `-- tests/
 ```
 
-The official assignment path is `src/`, `testcases/`, `build.sh`, and `run.sh`. The `frontend/`, `report/`, and older `tests/` folders are supplementary material and are not needed to build or grade the LLVM pass.
+The official compiler-pass path is `src/`, `testcases/`, `build.sh`, and `run.sh`. The frontend is included as the manual demo path: after the automated script passes, a user can paste LLVM IR into the browser and compare the optimized output with the expected files in `testcases/expected/`. The `report/` and older `tests/` folders are supplementary reference material.
 
 ## Requirements
 
@@ -156,13 +165,24 @@ exit
 
 After that, return to the VS Code WSL terminal and rerun the setup commands.
 
+## Fresh Clone Instructions
+
+Start by cloning the repository, then install packages.
+
+```bash
+git clone https://github.com/abhay271/IR-Optimization-Pass.git
+cd IR-Optimization-Pass
+```
+
+If the repository is already cloned, open it in VS Code and make sure the terminal is in the repository root before continuing.
+
 ## Installing Dependencies on Ubuntu or WSL
 
 One typical LLVM 18 setup is:
 
 ```bash
 sudo apt update
-sudo apt install -y cmake ninja-build clang llvm-18 llvm-18-dev llvm-18-tools
+sudo apt install -y cmake ninja-build clang llvm-18 llvm-18-dev llvm-18-tools nodejs npm
 ```
 
 If your system installs versioned tools only, you may need:
@@ -179,17 +199,6 @@ llvm-config --version
 opt --version
 ```
 
-## Fresh Clone Instructions
-
-From a fresh clone:
-
-```bash
-git clone https://github.com/abhay271/IR-Optimization-Pass.git
-cd IR-Optimization-Pass
-chmod +x build.sh run.sh
-./run.sh
-```
-
 If `llvm-config` is not available on PATH but LLVM is installed, pass `LLVM_DIR` manually:
 
 ```bash
@@ -204,7 +213,7 @@ LLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm ./build.sh
 
 ## VS Code + WSL Full Walkthrough
 
-Use this section if you are on Windows, already opened the repository in VS Code, and want to run both the required script and the optional frontend.
+Use this section if you are on Windows, already opened the repository in VS Code, and want the complete run flow: automated test script first, frontend manual check second.
 
 ### 1. Confirm the Correct Terminal
 
@@ -250,7 +259,7 @@ opt --version
 llvm-config --version
 ```
 
-### 4. Run the Required Script
+### 4. Run the Automated Test Script
 
 Run:
 
@@ -259,11 +268,15 @@ chmod +x build.sh run.sh
 ./run.sh
 ```
 
+`./run.sh` automatically builds the LLVM pass, runs every input in `testcases/*.ll`, compares the generated output against `testcases/expected/*.ll`, and prints the results table.
+
 Successful output ends with:
 
 ```text
 All testcases matched expected output.
 ```
+
+That line means the provided test suite passed.
 
 ### 5. Start the Frontend
 
@@ -285,25 +298,30 @@ http://localhost:3000
 
 ### 7. Test With Custom LLVM IR
 
-Paste this sample IR into the frontend:
+To manually check the pass, copy one of the input files from `testcases/` and paste it into the frontend. For example, use `testcases/combined.ll`:
 
 ```llvm
-define i32 @custom(i32 %x) {
+define i32 @combined(i32 %x) {
 entry:
   %a = add i32 4, 5
   %b = mul i32 %x, 8
-  %c = add i32 %a, %b
+  %c = add i32 %b, %a
   ret i32 %c
 }
 ```
 
-The optimized output should include a shift such as:
+After running it in the frontend, compare the output with `testcases/expected/combined.ll`:
 
 ```llvm
-%b = shl i32 %x, 3
+define i32 @combined(i32 %x) {
+entry:
+  %b = shl i32 %x, 3
+  %c = add i32 %b, 9
+  ret i32 %c
+}
 ```
 
-and the constant expression `add i32 4, 5` should be replaced by `9`.
+The exact LLVM header lines may differ, but the optimized function body should match the expected file.
 
 ## Build Script
 
@@ -348,6 +366,8 @@ What it does:
 5. compares generated output to `testcases/expected/`,
 6. prints a metrics table.
 
+This is the automated test script. It does not ask for manual input. It runs all provided test cases and prints PASS/FAIL results plus baseline-vs-optimized metrics.
+
 Expected final message:
 
 ```text
@@ -372,9 +392,9 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -S testcases/combined.ll -o testcases/actual/combined.ll
 ```
 
-## Optional Frontend Demo
+## Frontend Manual Demo
 
-The required grading path is `./run.sh`. The repository also includes a small optional frontend for manually pasting LLVM IR and seeing the optimized output in a browser.
+After `./run.sh` passes, use the frontend to manually paste LLVM IR and see the optimized output in a browser.
 
 From the WSL terminal in the repository root:
 
@@ -398,6 +418,11 @@ npm start
 ```
 
 The frontend sends the pasted LLVM IR to `server.js`, which runs the compiled LLVM pass through `opt` and returns the optimized IR.
+
+For manual checking, copy an input from `testcases/`, paste it into the frontend, then compare the result with the matching file in `testcases/expected/`. For example:
+
+- paste `testcases/combined.ll`
+- compare against `testcases/expected/combined.ll`
 
 ## Test Cases
 
