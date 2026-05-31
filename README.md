@@ -139,6 +139,23 @@ To use WSL inside VS Code:
 
 The terminal prompt should look like a Linux shell, not PowerShell. For example, commands such as `sudo`, `chmod`, and `./run.sh` should work there.
 
+If `sudo` asks for a password, enter the Ubuntu/WSL password created when Ubuntu was first set up. Linux terminals do not show characters while the password is being typed.
+
+If that password is forgotten, open Windows PowerShell and start WSL as root:
+
+```powershell
+wsl -u root
+```
+
+Then reset the Ubuntu user's password:
+
+```bash
+passwd abhay
+exit
+```
+
+After that, return to the VS Code WSL terminal and rerun the setup commands.
+
 ## Installing Dependencies on Ubuntu or WSL
 
 One typical LLVM 18 setup is:
