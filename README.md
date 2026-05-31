@@ -150,7 +150,7 @@ wsl -u root
 Then reset the Ubuntu user's password:
 
 ```bash
-passwd abhay
+passwd <name>
 exit
 ```
 
@@ -268,6 +268,33 @@ opt -load-pass-plugin ./build/ConstFoldStrengthReducePass.so \
   -passes=const-fold-strength-reduce \
   -S testcases/combined.ll -o testcases/actual/combined.ll
 ```
+
+## Optional Frontend Demo
+
+The required grading path is `./run.sh`. The repository also includes a small optional frontend for manually pasting LLVM IR and seeing the optimized output in a browser.
+
+From the WSL terminal in the repository root:
+
+```bash
+export PATH=/usr/lib/llvm-18/bin:$PATH
+./build.sh
+npm start
+```
+
+Then open this URL in a browser:
+
+```text
+http://localhost:3000
+```
+
+If `npm` is not installed in WSL, install it first:
+
+```bash
+sudo apt install -y nodejs npm
+npm start
+```
+
+The frontend sends the pasted LLVM IR to `server.js`, which runs the compiled LLVM pass through `opt` and returns the optimized IR.
 
 ## Test Cases
 
