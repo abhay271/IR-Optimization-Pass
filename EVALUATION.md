@@ -32,9 +32,9 @@ testcases/expected/*.ll
 
 ```mermaid
 flowchart TD
-    A["Input IR<br/>testcases/*.ll"] --> B["Count baseline operations"]
+    A["Input IR: testcases/*.ll"] --> B["Count baseline operations"]
     A --> C["Run custom LLVM pass"]
-    C --> D["Optimized IR<br/>testcases/actual/*.ll"]
+    C --> D["Optimized IR: testcases/actual/*.ll"]
     D --> E["Compare with expected output"]
     D --> F["Count optimized operations"]
     B --> G["Metrics table"]

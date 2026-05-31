@@ -57,7 +57,7 @@ The build script does this:
 ```mermaid
 flowchart LR
     A["./build.sh"] --> B["Find CMake"]
-    B --> C["Find LLVM_DIR<br/>or llvm-config --cmakedir"]
+    B --> C["Find LLVM_DIR or llvm-config --cmakedir"]
     C --> D["Configure build/"]
     D --> E["Compile C++17 source"]
     E --> F["Create LLVM pass plugin"]

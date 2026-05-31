@@ -56,10 +56,10 @@ In this example:
 
 ```mermaid
 flowchart LR
-    A["LLVM IR input<br/>testcases/*.ll"] --> B["Custom LLVM pass<br/>src/ConstFoldStrengthReduce.cpp"]
-    B --> C["Optimized LLVM IR<br/>testcases/actual/*.ll"]
-    C --> D["Compare with expected output<br/>testcases/expected/*.ll"]
-    D --> E["Print metrics<br/>baseline vs optimized"]
+    A["LLVM IR input: testcases/*.ll"] --> B["Custom LLVM pass: src/ConstFoldStrengthReduce.cpp"]
+    B --> C["Optimized LLVM IR: testcases/actual/*.ll"]
+    C --> D["Compare with expected output: testcases/expected/*.ll"]
+    D --> E["Print metrics: baseline vs optimized"]
 ```
 
 ## Repository Layout
@@ -144,8 +144,8 @@ opt --version
 From a fresh clone:
 
 ```bash
-git clone <repo-url>
-cd <repo-folder>
+git clone https://github.com/abhay271/IR-Optimization-Pass.git
+cd IR-Optimization-Pass
 chmod +x build.sh run.sh
 ./run.sh
 ```
