@@ -116,6 +116,29 @@ CMake 3.16 or newer
 
 This project was originally verified with LLVM 18 on Ubuntu 24.04 through WSL.
 
+## Windows Users: Use WSL/Ubuntu, Not PowerShell
+
+On Windows, run this project from a WSL/Ubuntu terminal. Do not run the LLVM build commands from regular PowerShell or Command Prompt unless you have a full native LLVM/CMake toolchain configured manually.
+
+To install WSL with Ubuntu, open PowerShell as Administrator and run:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Restart the computer if Windows asks you to. Then open Ubuntu from the Start menu once and finish the username/password setup.
+
+To use WSL inside VS Code:
+
+1. Install the VS Code extension named `WSL` from Microsoft.
+2. Open VS Code.
+3. Press `Ctrl+Shift+P`.
+4. Run `WSL: Connect to WSL`.
+5. Open this repository folder from the WSL VS Code window.
+6. Open `Terminal` -> `New Terminal`.
+
+The terminal prompt should look like a Linux shell, not PowerShell. For example, commands such as `sudo`, `chmod`, and `./run.sh` should work there.
+
 ## Installing Dependencies on Ubuntu or WSL
 
 One typical LLVM 18 setup is:
