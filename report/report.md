@@ -1,5 +1,7 @@
 # Constant Folding Pass with Strength Reduction
 
+> Note: this report is supplementary background. For the fresh-clone build and grading workflow, use the root-level `README.md`, `DESIGN.md`, `IMPLEMENTATION.md`, `EVALUATION.md`, `build.sh`, `run.sh`, and `testcases/` directory.
+
 ## Objective
 
 The objective of this assignment is to implement an LLVM function pass that optimizes arithmetic instructions in LLVM IR. The pass performs constant folding for binary operators with constant operands and strength reduction for multiplication or unsigned division by powers of two.

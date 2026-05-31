@@ -1,5 +1,7 @@
 # Verified `opt` Run Output
 
+> Note: this file records an earlier manual verification run. The official fresh-clone workflow is now `./build.sh` followed by `./run.sh`, using the `testcases/` directory and the documentation in the root Markdown files.
+
 The pass was built and tested in Ubuntu 24.04 on WSL using:
 
 ```text
