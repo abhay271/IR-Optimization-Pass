@@ -80,22 +80,15 @@ add_llvm_pass_plugin(ConstFoldStrengthReducePass
 The run script does this:
 
 ```mermaid
-sequenceDiagram
-    participant User
-    participant Run as run.sh
-    participant Build as build.sh
-    participant Opt as opt
-    participant Cases as testcases/
-
-    User->>Run: ./run.sh
-    Run->>Build: build pass plugin
-    Build-->>Run: ConstFoldStrengthReducePass.so
-    loop each *.ll file
-        Run->>Opt: load plugin and run pass
-        Opt-->>Cases: write testcases/actual/*.ll
-        Run->>Cases: compare actual vs expected
-    end
-    Run-->>User: print PASS/FAIL and metrics
+flowchart TD
+    A["User runs ./run.sh"] --> B["run.sh calls build.sh"]
+    B --> C["build.sh creates the pass plugin"]
+    C --> D["run.sh finds the plugin in build/"]
+    D --> E["For each LLVM IR file in testcases/"]
+    E --> F["Run opt with the custom pass"]
+    F --> G["Write optimized IR to testcases/actual/"]
+    G --> H["Compare actual output with testcases/expected/"]
+    H --> I["Print PASS or FAIL plus metrics"]
 ```
 
 ## Instruction Traversal
