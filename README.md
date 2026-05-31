@@ -9,6 +9,8 @@ This repository contains a custom LLVM optimization pass written in C++. The pas
 3. strength reduction for unsigned division by powers of two,
 4. multiplication identity simplification for `x * 0` and `x * 1`.
 
+DEMO link: https://drive.google.com/file/d/13KfC69mfit_ieFu_s4wkTuYNOZjyVGaI/view?usp=sharing
+
 The main run flow is:
 
 ```bash
